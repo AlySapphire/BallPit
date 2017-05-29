@@ -18,6 +18,7 @@ namespace Physics {
 	void GizmosRenderer::Draw(Scene * scene) {
 
 		RenderGizmosObjects(scene);
+		RenderGizmosConstraints(scene);
 
 	}
 
@@ -52,12 +53,11 @@ namespace Physics {
 	void GizmosRenderer::RenderGizmosConstraints(Scene * scene) {
 
 		for(auto& iter : scene->GetConstraints()) {
-
+			Object* objA = nullptr;
+			Object* objB = nullptr;
+			iter->GetConnections(&objA, &objB);
 			switch(iter->GetType()) {
 				case Constraint::ConstraintType::SPRING:
-					Object* objA = nullptr;
-					Object* objB = nullptr;
-					iter->GetConnections(objA, objB);
 					aie::Gizmos::addLine(objA->GetPosition(), objB->GetPosition(), GetRenderInfo((Spring*)iter)->color);
 					break;
 				case Constraint::ConstraintType::JOINT:
