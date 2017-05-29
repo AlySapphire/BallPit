@@ -44,7 +44,7 @@ namespace Physics {
 	void Scene::AttatchObject(Object * obj) {
 
 		auto find = std::find(m_Objects.begin(), m_Objects.end(), obj);
-		if(find != m_Objects.end)		return;
+		if(find != m_Objects.end())		return;
 
 		m_Objects.push_back(obj);
 
