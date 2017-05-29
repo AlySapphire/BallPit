@@ -88,6 +88,26 @@ void BallPitApp::update(float deltaTime) {
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 
+	//Shoot ball
+	if(input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT) && input->isKeyDown(aie::INPUT_KEY_LEFT_SHIFT)) {
+		float shotSpeed = 20.0f;
+		Physics::Object* obj = new Physics::Object();
+		obj->SetPosition(m_Camera->GetPosition());
+		obj->SetVelocity(m_Camera->GetForward() * shotSpeed);
+		obj->SetCollider(new Physics::SphereCollider(0.25f));
+		obj->SetMass(20.0f);
+		obj->SetBounciness(5);
+
+		m_GizmosRenderer->GetRenderInfo(obj)->color = glm::vec4(
+			rand() % 255 / 255.0f,
+			rand() % 255 / 255.0f,
+			rand() % 255 / 255.0f,
+			1.0f
+		);
+
+		m_PhysicsScene->AttatchObject(obj);
+	}
+
 	m_PhysicsScene->FixedUpdate();
 
 }
