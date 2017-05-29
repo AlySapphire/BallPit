@@ -16,7 +16,7 @@ namespace Physics {
 
 		virtual void FixedUpdate() = 0;
 
-		inline const void GetConnections(Object* objA, Object* objB) const { objA = m_ObjA; objB = m_ObjB; }
+		inline const void GetConnections(Object** objA, Object** objB) const { *objA = m_ObjA; *objB = m_ObjB; }
 		inline ConstraintType GetType() { return m_Type; }
 
 	protected:
