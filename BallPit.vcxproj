@@ -98,6 +98,7 @@
     <ClCompile Include="src\Physics\PhysicsObject.cpp" />
     <ClCompile Include="src\Physics\PhysicsScene.cpp" />
     <ClCompile Include="src\Physics\SphereCollider.cpp" />
+    <ClCompile Include="src\Physics\Spring.cpp" />
     <ClCompile Include="src\Rendering\Camera.cpp" />
     <ClCompile Include="src\Rendering\GizmosRenderer.cpp" />
   </ItemGroup>
@@ -109,6 +110,7 @@
     <ClInclude Include="inc\Physics\PhysicsObject.hpp" />
     <ClInclude Include="inc\Physics\PhysicsScene.hpp" />
     <ClInclude Include="inc\Physics\SphereCollider.hpp" />
+    <ClInclude Include="inc\Physics\Spring.hpp" />
     <ClInclude Include="inc\Rendering\Camera.h" />
     <ClInclude Include="inc\Rendering\GizmosRenderer.hpp" />
   </ItemGroup>
