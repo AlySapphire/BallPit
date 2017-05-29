@@ -2,6 +2,11 @@
 
 #include "Application.h"
 #include <glm/mat4x4.hpp>
+#include <vector>
+
+namespace Physics {
+	class Object;
+}
 
 class Camera;
 
@@ -20,6 +25,8 @@ public:
 protected:
 
 	Camera* m_Camera;
+	
+	std::vector<Physics::Object*> m_Objects;
 
 	void DrawGrid();
 

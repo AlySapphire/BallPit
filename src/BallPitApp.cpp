@@ -6,6 +6,9 @@
 
 #include "Rendering/Camera.h"
 
+#include "Physics/PhysicsObject.hpp"
+#include "Physics/SphereCollider.hpp"
+
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
@@ -34,6 +37,13 @@ bool BallPitApp::startup() {
 	m_Camera->SetPosition(glm::vec3(5, 10, 5));
 	m_Camera->Lookat(glm::vec3(0, 0, 0));
 
+	for(int i = -3; i < 3; i++) {
+		Physics::Object* obj = new Physics::Object();
+		obj->SetPosition(glm::vec3(i, 5, 0));
+		obj->SetCollider(new Physics::SphereCollider(0.25f));
+		m_Objects.push_back(obj);
+	}
+
 	return true;
 }
 
@@ -42,6 +52,11 @@ void BallPitApp::shutdown() {
 	Gizmos::destroy();
 
 	if(m_Camera != nullptr)		delete m_Camera;
+
+	for(auto iter : m_Objects) {
+		delete iter;
+	}
+	m_Objects.clear();
 
 }
 
@@ -54,6 +69,12 @@ void BallPitApp::update(float deltaTime) {
 
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
+
+	for(auto iter : m_Objects) {
+		iter->ApplyForce(glm::vec3(0, -9.8, 0));
+		iter->FixedUpdate();
+	}
+
 }
 
 void BallPitApp::draw() {
@@ -65,6 +86,11 @@ void BallPitApp::draw() {
 	Gizmos::clear();
 
 	DrawGrid();
+
+	for(auto iter : m_Objects) {
+		Physics::SphereCollider* sCol = (Physics::SphereCollider*)iter->GetCollider();
+		Gizmos::addSphere(sCol->GetPosition(), sCol->GetRadius(), 8, 8, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+	}
 
 	Gizmos::draw(m_Camera->GetProjectionView());
 }
