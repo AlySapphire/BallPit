@@ -93,9 +93,11 @@
   <ItemGroup>
     <ClCompile Include="src\BallPitApp.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Rendering\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\BallPitApp.h" />
+    <ClInclude Include="inc\Rendering\Camera.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
