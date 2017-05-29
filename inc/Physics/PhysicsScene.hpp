@@ -1,13 +1,22 @@
 #pragma once
 
-#include <glm/vec3.hpp>
 #include <vector>
+#include <map>
+#include "Intersect.hpp"
 
 namespace Physics {
 
 	class Object;
 	class Scene {
 	public:
+
+		struct CollisionInfo {
+			Object* objA;
+			Object* objB;
+
+			IntersectData intersection;
+		};
+
 		Scene();
 		virtual ~Scene();
 
@@ -25,9 +34,17 @@ namespace Physics {
 		void AttatchObject(Object* obj);
 		void RemoveObject(Object* obj);
 
+		inline bool IsInCollision(Object* obj) { return m_InCollisionLookup[obj]; }
+
 	protected:
 
+		void DetectCollisions();
+		void ResolveCollisions();
+
 		std::vector<Object*> m_Objects;
+
+		std::vector<CollisionInfo> m_CollisionPairs;
+		std::map<Object*, bool> m_InCollisionLookup;
 
 		glm::vec3 m_GlobalForce;
 		glm::vec3 m_Gravity;
