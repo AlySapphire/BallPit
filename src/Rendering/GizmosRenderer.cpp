@@ -3,6 +3,7 @@
 #include "Physics/PhysicsObject.hpp"
 #include "Physics/PhysicsScene.hpp"
 #include "Physics/SphereCollider.hpp"
+#include "Physics/Spring.hpp"
 
 #include <Gizmos.h>
 
@@ -42,6 +43,26 @@ namespace Physics {
 			//Render AABB
 			else if(collider->GetType() == Collider::ColliderType::AABB) {
 				//TODO: Render AABB
+			}
+
+		}
+
+	}
+
+	void GizmosRenderer::RenderGizmosConstraints(Scene * scene) {
+
+		for(auto& iter : scene->GetConstraints()) {
+
+			switch(iter->GetType()) {
+				case Constraint::ConstraintType::SPRING:
+					Object* objA = nullptr;
+					Object* objB = nullptr;
+					iter->GetConnections(objA, objB);
+					aie::Gizmos::addLine(objA->GetPosition(), objB->GetPosition(), GetRenderInfo((Spring*)iter)->color);
+					break;
+				case Constraint::ConstraintType::JOINT:
+					//TODO: implement joint drawing
+					break;
 			}
 
 		}

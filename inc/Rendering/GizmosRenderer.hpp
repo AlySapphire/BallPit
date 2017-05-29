@@ -7,6 +7,7 @@ namespace Physics {
 
 	class Scene;
 	class Object;
+	class Spring;
 	class GizmosRenderer {
 	public:
 		GizmosRenderer();
@@ -19,12 +20,15 @@ namespace Physics {
 		};
 
 		inline RenderInfo* GetRenderInfo(Object* obj) { return &m_ObjectRenderInfo[obj]; }
+		inline RenderInfo* GetRenderInfo(Spring* spring) { return &m_SpringRenderInfo[spring]; }
 
 	protected:
 
 		std::map<Object*, RenderInfo> m_ObjectRenderInfo;
+		std::map<Spring*, RenderInfo> m_SpringRenderInfo;
 
 		void RenderGizmosObjects(Scene* scene);
+		void RenderGizmosConstraints(Scene* scene);
 
 	};
 
