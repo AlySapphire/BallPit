@@ -26,11 +26,12 @@ namespace Physics {
 
 		for(auto iter : objects) {
 
-			//Get the current objects' collider
+			//Get the current objects' collider and find out whether it's in a collision
 			Collider* collider = iter->GetCollider();
+			bool isInCollision = scene->IsInCollision(iter);
 
 			//Get color information
-			glm::vec4 color = GetRenderInfo(iter)->color;
+			glm::vec4 color = (isInCollision) ? glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) : GetRenderInfo(iter)->color;
 
 			//Render Sphere Collider
 			if(collider->GetType() == Collider::ColliderType::SPHERE) {
