@@ -10,11 +10,16 @@
 #include "Physics/PhysicsObject.hpp"
 #include "Physics/SphereCollider.hpp"
 #include "Physics/PhysicsScene.hpp"
+#include "Physics/Spring.hpp"
 
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 using aie::Gizmos;
+
+float GetDistance(const glm::vec3& posA, const glm::vec3& posB) {
+	return glm::distance(posA, posB);
+}
 
 BallPitApp::BallPitApp() : m_Camera(nullptr), m_PhysicsScene(nullptr), m_GizmosRenderer(nullptr) {
 
@@ -35,7 +40,7 @@ bool BallPitApp::startup() {
 	setBackgroundColour(0.25f, 0.25f, 0.25f);
 
 	// initialise gizmo primitive counts
-	Gizmos::create(10000, 10000, 10000, 10000);
+	Gizmos::create(100000, 100000, 100000, 100000);
 
 	//Initialize camera
 	m_Camera = new Camera();
@@ -48,18 +53,169 @@ bool BallPitApp::startup() {
 	m_GizmosRenderer = new Physics::GizmosRenderer();
 
 	//Add Objects to the scene
-	for(int i = -3; i < 3; i++) {
-		Physics::Object* obj = new Physics::Object();
-		obj->SetPosition(glm::vec3(i, 5, 0));
-		obj->SetCollider(new Physics::SphereCollider(0.25f));
-		m_GizmosRenderer->GetRenderInfo(obj)->color = glm::vec4(
-			rand() % 255 / 255.0f,
-			rand() % 255 / 255.0f,
-			rand() % 255 / 255.0f,
-			1.0f
-		);
+	//for(int i = -3; i < 3; i++) {
+	//	Physics::Object* obj = new Physics::Object();
+	//	obj->SetPosition(glm::vec3(i, 5, 0));
+	//	obj->SetCollider(new Physics::SphereCollider(0.25f));
+	//	m_GizmosRenderer->GetRenderInfo(obj)->color = glm::vec4(
+	//		rand() % 255 / 255.0f,
+	//		rand() % 255 / 255.0f,
+	//		rand() % 255 / 255.0f,
+	//		1.0f
+	//	);
+	//
+	//	m_PhysicsScene->AttachObject(obj);
+	//}
 
-		m_PhysicsScene->AttachObject(obj);
+	const int maxX = 4;
+	const int maxY = 10;
+	const int maxZ = 4;
+
+	Physics::Object* blob[maxX][maxY][maxZ];
+
+	for(int x = 0; x < maxX; x++) {
+		for(int y = 0; y < maxY; y++) {
+			for(int z = 0; z < maxZ; z++) {
+				blob[x][y][z] = new Physics::Object();
+				blob[x][y][z]->SetPosition(glm::vec3(x, y + 1, z));
+				blob[x][y][z]->SetCollider(new Physics::SphereCollider(0.25f));
+
+				m_GizmosRenderer->GetRenderInfo(blob[x][y][z])->color = glm::vec4(
+					rand() % 255 / 255.0f,
+					rand() % 255 / 255.0f,
+					rand() % 255 / 255.0f,
+					1.0f
+				);
+
+				m_PhysicsScene->AttachObject(blob[x][y][z]);
+
+			}
+		}
+	}
+
+	float stiffness = 745.0f;
+	float friction = 0.4f;
+
+	for(int x = 0; x < maxX; x++) {
+		for(int y = 0; y < maxY; y++) {
+			for(int z = 0; z < maxZ; z++) {
+
+				bool xNext = (x + 1 < maxX);
+				bool yNext = (y + 1 < maxY);
+				bool zNext = (z + 1 < maxZ);
+				bool xBefore = (x - 1 >= 0);
+				bool yBefore = (y - 1 >= 0);
+				bool zBefore = (z - 1 >= 0);
+
+				if(zNext) {
+
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x][y][z + 1], GetDistance(blob[x][y][z]->GetPosition(),
+																													  blob[x][y][z + 1]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+				if(yNext) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x][y + 1][z], GetDistance(blob[x][y][z]->GetPosition(),
+																													  blob[x][y + 1][z]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+				if(xNext) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y][z], GetDistance(blob[x][y][z]->GetPosition(),
+																													  blob[x + 1][y][z]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+
+				if(xNext && yNext) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y + 1][z],
+																		GetDistance(blob[x][y][z]->GetPosition(),
+																					blob[x + 1][y + 1][z]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+
+				if(zNext && yNext) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x][y + 1][z + 1],
+																		GetDistance(blob[x][y][z]->GetPosition(),
+																					blob[x][y + 1][z + 1]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+				if(xNext && zNext) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y][z + 1],
+																		GetDistance(blob[x][y][z]->GetPosition(),
+																					blob[x + 1][y][z + 1]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+
+				if(xBefore && zBefore) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x - 1][y][z - 1],
+																		GetDistance(blob[x][y][z]->GetPosition(),
+																					blob[x - 1][y][z - 1]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+				if(yBefore && zBefore) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x][y - 1][z - 1],
+																		GetDistance(blob[x][y][z]->GetPosition(),
+																					blob[x][y - 1][z - 1]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+				if(xBefore && yBefore) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x - 1][y - 1][z],
+																		GetDistance(blob[x][y][z]->GetPosition(),
+																					blob[x - 1][y - 1][z]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+
+				if(xNext && yNext && zNext) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y + 1][z + 1],
+																		GetDistance(blob[x][y][z]->GetPosition(),
+																					blob[x + 1][y + 1][z + 1]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+				if(xNext && yBefore && zNext) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y - 1][z + 1],
+																		GetDistance(blob[x][y][z]->GetPosition(),
+																					blob[x + 1][y - 1][z + 1]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+				if(xNext && yNext && zBefore) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y + 1][z - 1],
+																		GetDistance(blob[x][y][z]->GetPosition(),
+																					blob[x + 1][y + 1][z - 1]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+				if(xNext && yBefore & zBefore) {
+					Physics::Spring* spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y - 1][z - 1],
+																		GetDistance(blob[x][y][z]->GetPosition(),
+																					blob[x + 1][y - 1][z - 1]->GetPosition()),
+																		stiffness, friction);
+					m_GizmosRenderer->GetRenderInfo(spring)->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+					m_PhysicsScene->AttachConstraint(spring);
+				}
+
+			}
+		}
 	}
 
 	//Give the scene gravity
