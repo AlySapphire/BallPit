@@ -95,15 +95,19 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Physics\Collider.cpp" />
     <ClCompile Include="src\Physics\PhysicsObject.cpp" />
+    <ClCompile Include="src\Physics\PhysicsScene.cpp" />
     <ClCompile Include="src\Physics\SphereCollider.cpp" />
     <ClCompile Include="src\Rendering\Camera.cpp" />
+    <ClCompile Include="src\Rendering\GizmosRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\BallPitApp.h" />
     <ClInclude Include="inc\Physics\Collider.hpp" />
     <ClInclude Include="inc\Physics\PhysicsObject.hpp" />
+    <ClInclude Include="inc\Physics\PhysicsScene.hpp" />
     <ClInclude Include="inc\Physics\SphereCollider.hpp" />
     <ClInclude Include="inc\Rendering\Camera.h" />
+    <ClInclude Include="inc\Rendering\GizmosRenderer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
