@@ -19,6 +19,7 @@ namespace Physics {
 		m_Velocity += m_Acceleration * fixedTime;
 		m_Position += m_Velocity * fixedTime;
 		m_Acceleration = glm::vec3();
+		UpdateTransform();
 
 	}
 
