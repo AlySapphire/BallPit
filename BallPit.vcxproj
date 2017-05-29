@@ -93,11 +93,13 @@
   <ItemGroup>
     <ClCompile Include="src\BallPitApp.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Physics\Collider.cpp" />
     <ClCompile Include="src\Physics\PhysicsObject.cpp" />
     <ClCompile Include="src\Rendering\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\BallPitApp.h" />
+    <ClInclude Include="inc\Physics\Collider.hpp" />
     <ClInclude Include="inc\Physics\PhysicsObject.hpp" />
     <ClInclude Include="inc\Rendering\Camera.h" />
   </ItemGroup>
