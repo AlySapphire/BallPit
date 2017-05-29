@@ -4,6 +4,7 @@
 
 namespace Physics {
 
+	class Collider;
 	class Object {
 	public:
 		Object();
@@ -20,6 +21,7 @@ namespace Physics {
 		inline const float GetMass() const { return m_Mass; }
 		inline const float GetFriction() const { return m_Friction; }
 		inline const float GetBounciness() const { return m_Bounciness; }
+		Collider* GetCollider();
 
 		//Setters
 		void SetPosition(const glm::vec3& a_Pos);
@@ -28,8 +30,11 @@ namespace Physics {
 		inline void SetMass(float a_Mass) { m_Mass = a_Mass; }
 		inline void SetFriction(float a_Fric) { m_Friction = a_Fric; }
 		inline void SetBounciness(float a_Bounce) { m_Bounciness = a_Bounce; }
+		void SetCollider(Collider* coll);
 
 	protected:
+
+		void UpdateTransform();
 
 		glm::vec3 m_Position;
 		glm::vec3 m_Velocity;
@@ -38,6 +43,8 @@ namespace Physics {
 		float m_Mass;
 		float m_Friction;
 		float m_Bounciness;
+
+		Collider* m_Collider;
 
 	};
 
