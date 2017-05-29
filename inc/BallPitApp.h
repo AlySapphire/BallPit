@@ -6,6 +6,8 @@
 
 namespace Physics {
 	class Object;
+	class Scene;
+	class GizmosRenderer;
 }
 
 class Camera;
@@ -26,7 +28,8 @@ protected:
 
 	Camera* m_Camera;
 	
-	std::vector<Physics::Object*> m_Objects;
+	Physics::Scene* m_PhysicsScene;
+	Physics::GizmosRenderer* m_GizmosRenderer;
 
 	void DrawGrid();
 

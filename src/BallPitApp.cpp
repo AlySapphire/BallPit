@@ -5,26 +5,32 @@
 #include <glm/ext.hpp>
 
 #include "Rendering/Camera.h"
+#include "Rendering/GizmosRenderer.hpp"
 
 #include "Physics/PhysicsObject.hpp"
 #include "Physics/SphereCollider.hpp"
+#include "Physics/PhysicsScene.hpp"
 
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 using aie::Gizmos;
 
-BallPitApp::BallPitApp() : m_Camera(nullptr) {
+BallPitApp::BallPitApp() : m_Camera(nullptr), m_PhysicsScene(nullptr), m_GizmosRenderer(nullptr) {
 
 }
 
 BallPitApp::~BallPitApp() {
 
 	m_Camera = nullptr;
+	m_PhysicsScene = nullptr;
+	m_GizmosRenderer = nullptr;
 
 }
 
 bool BallPitApp::startup() {
+
+	srand(unsigned(time(NULL)));
 	
 	setBackgroundColour(0.25f, 0.25f, 0.25f);
 
@@ -37,12 +43,27 @@ bool BallPitApp::startup() {
 	m_Camera->SetPosition(glm::vec3(5, 10, 5));
 	m_Camera->Lookat(glm::vec3(0, 0, 0));
 
+	//Initialize Scene and Renderer
+	m_PhysicsScene = new Physics::Scene();
+	m_GizmosRenderer = new Physics::GizmosRenderer();
+
+	//Add Objects to the scene
 	for(int i = -3; i < 3; i++) {
 		Physics::Object* obj = new Physics::Object();
 		obj->SetPosition(glm::vec3(i, 5, 0));
 		obj->SetCollider(new Physics::SphereCollider(0.25f));
-		m_Objects.push_back(obj);
+		m_GizmosRenderer->GetRenderInfo(obj)->color = glm::vec4(
+			rand() % 255 / 255.0f,
+			rand() % 255 / 255.0f,
+			rand() % 255 / 255.0f,
+			1.0f
+		);
+
+		m_PhysicsScene->AttatchObject(obj);
 	}
+
+	//Give the scene gravity
+	m_PhysicsScene->SetGravity(glm::vec3(0, -9.8f, 0));
 
 	return true;
 }
@@ -51,13 +72,10 @@ void BallPitApp::shutdown() {
 
 	Gizmos::destroy();
 
-	if(m_Camera != nullptr)		delete m_Camera;
-
-	for(auto iter : m_Objects) {
-		delete iter;
-	}
-	m_Objects.clear();
-
+	if(m_Camera != nullptr)			delete m_Camera;
+	if(m_PhysicsScene != nullptr)	delete m_PhysicsScene;
+	if(m_GizmosRenderer != nullptr)	delete m_GizmosRenderer;
+	
 }
 
 void BallPitApp::update(float deltaTime) {
@@ -70,10 +88,7 @@ void BallPitApp::update(float deltaTime) {
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 
-	for(auto iter : m_Objects) {
-		iter->ApplyForce(glm::vec3(0, -9.8, 0));
-		iter->FixedUpdate();
-	}
+	m_PhysicsScene->FixedUpdate();
 
 }
 
@@ -87,10 +102,8 @@ void BallPitApp::draw() {
 
 	DrawGrid();
 
-	for(auto iter : m_Objects) {
-		Physics::SphereCollider* sCol = (Physics::SphereCollider*)iter->GetCollider();
-		Gizmos::addSphere(sCol->GetPosition(), sCol->GetRadius(), 8, 8, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-	}
+	//Render our objects
+	m_GizmosRenderer->Draw(m_PhysicsScene);
 
 	Gizmos::draw(m_Camera->GetProjectionView());
 }
