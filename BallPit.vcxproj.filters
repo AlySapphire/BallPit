@@ -24,12 +24,18 @@
     <ClCompile Include="src\Rendering\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Physics\PhysicsObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\BallPitApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\Rendering\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Physics\PhysicsObject.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
