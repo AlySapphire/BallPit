@@ -1,6 +1,7 @@
 #include "Physics/PhysicsScene.hpp"
 #include "Physics/PhysicsObject.hpp"
 #include "Physics/Collider.hpp"
+#include "Physics/Spring.hpp"
 
 #include <glm/geometric.hpp>
 
@@ -16,9 +17,19 @@ namespace Physics {
 			delete iter;
 		m_Objects.clear();
 
+		//Clean up constraints
+		for(auto iter : m_Constraints)
+			delete iter;
+		m_Constraints.clear();
+
 	}
 
 	void Scene::FixedUpdate() {
+
+		//Update Constraints
+		for(auto iter : m_Constraints) {
+			iter->FixedUpdate();
+		}
 
 		//Update all objects
 		for(auto iter : m_Objects) {
@@ -46,7 +57,7 @@ namespace Physics {
 
 	}
 
-	void Scene::AttatchObject(Object * obj) {
+	void Scene::AttachObject(Object * obj) {
 
 		auto find = std::find(m_Objects.begin(), m_Objects.end(), obj);
 		if(find != m_Objects.end())		return;
@@ -62,6 +73,25 @@ namespace Physics {
 
 		delete (*find);
 		m_Objects.erase(find);
+
+	}
+
+	void Scene::AttachConstraint(Constraint * con) {
+
+		auto find = std::find(m_Constraints.begin(), m_Constraints.end(), con);
+		if(find != m_Constraints.end())		return;
+
+		m_Constraints.push_back(con);
+
+	}
+
+	void Scene::RemoveConstraint(Constraint * con) {
+
+		auto find = std::find(m_Constraints.begin(), m_Constraints.end(), con);
+		if(find == m_Constraints.end())	return;
+
+		delete (*find);
+		m_Constraints.erase(find);
 
 	}
 
