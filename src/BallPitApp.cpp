@@ -59,7 +59,7 @@ bool BallPitApp::startup() {
 			1.0f
 		);
 
-		m_PhysicsScene->AttatchObject(obj);
+		m_PhysicsScene->AttachObject(obj);
 	}
 
 	//Give the scene gravity
@@ -105,7 +105,7 @@ void BallPitApp::update(float deltaTime) {
 			1.0f
 		);
 
-		m_PhysicsScene->AttatchObject(obj);
+		m_PhysicsScene->AttachObject(obj);
 	}
 
 	m_PhysicsScene->FixedUpdate();
