@@ -7,7 +7,7 @@ namespace Physics {
 	class AABBCollider : public Collider {
 	public:
 		AABBCollider();
-		AABBCollider(const glm::vec3& centre, const glm::vec3& extents);
+		AABBCollider(const glm::vec3& extents);
 		virtual ~AABBCollider();
 
 		//GETTERS
