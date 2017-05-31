@@ -70,6 +70,7 @@ namespace Physics {
 		
 		//Get the length of the vector
 		float dist = glm::length(dirVec);
+		//This one is incorrect. It needs to be the normalized direction vector and the overlap length
 		intersection->collisionVector = glm::normalize(dirVec);
 		
 		//Compare it to the sphere radius
