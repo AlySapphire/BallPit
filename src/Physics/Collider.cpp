@@ -71,7 +71,7 @@ namespace Physics {
 
 		//Get the length of the vector
 		float dist = glm::length(dirVec);
-		intersection->collisionVector = dirVec;
+		intersection->collisionVector = glm::normalize(dirVec);
 
 		//Compare it to the sphere radius
 		return (dist < objA->GetRadius());
@@ -79,14 +79,14 @@ namespace Physics {
 		//float x = glm::max(boxMin.x, glm::min(sphereCentre.x, boxMax.x));
 		//float y = glm::max(boxMin.y, glm::min(sphereCentre.y, boxMax.y));
 		//float z = glm::max(boxMin.z, glm::min(sphereCentre.z, boxMax.z));
-
-
+		//
+		//
 		//float dist = glm::sqrt((x - sphereCentre.x) * (x - sphereCentre.x) +
 		//						(y - sphereCentre.y) * (y - sphereCentre.y) +
 		//						(z - sphereCentre.z) * (z - sphereCentre.z));
-
+		//
 		//intersection->collisionVector = glm::vec3(x, y, z);
-		
+		//
 		//return (dist < objA->GetRadius());
 	}
 
