@@ -1,5 +1,6 @@
 #include "Physics/Collider.hpp"
 #include "Physics/SphereCollider.hpp"
+#include "Physics/AABBCollider.hpp"
 
 #include <glm/geometric.hpp>
 
@@ -44,12 +45,18 @@ namespace Physics {
 		float dist = glm::length(dirVec);
 		float minDist = objA->GetRadius() + objB->GetRadius();
 
-		//Create collision vector which is the normilized direction vector and the length of the overlap
+		//Create collision vector which is the normalized direction vector and the length of the overlap
 		dirVec = glm::normalize(dirVec) * (minDist - dist);
 		intersection->collisionVector = dirVec;
 
 		return (dist < minDist);
 
+	}
+
+	bool Collider::Sphere2AABB(SphereCollider * objA, AABBCollider * objB, IntersectData * intersection) {
+		//TODO: Implement Sphere to AABB intersection logic
+		
+		return false;
 	}
 
 }

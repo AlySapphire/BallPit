@@ -6,6 +6,7 @@ namespace Physics {
 
 	class Object;
 	class SphereCollider;
+	class AABBCollider;
 	class Collider {
 	public:
 
@@ -26,6 +27,7 @@ namespace Physics {
 
 		//TODO: Move this into some sort of collision class
 		static bool Sphere2Sphere(SphereCollider* objA, SphereCollider* objB, IntersectData* intersection);
+		static bool Sphere2AABB(SphereCollider* objA, AABBCollider* objB, IntersectData* intersection);
 
 	protected:
 

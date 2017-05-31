@@ -93,6 +93,7 @@
   <ItemGroup>
     <ClCompile Include="src\BallPitApp.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Physics\AABBCollider.cpp" />
     <ClCompile Include="src\Physics\Collider.cpp" />
     <ClCompile Include="src\Physics\Constraint.cpp" />
     <ClCompile Include="src\Physics\PhysicsObject.cpp" />
@@ -104,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\BallPitApp.h" />
+    <ClInclude Include="inc\Physics\AABBCollider.hpp" />
     <ClInclude Include="inc\Physics\Collider.hpp" />
     <ClInclude Include="inc\Physics\Constraint.hpp" />
     <ClInclude Include="inc\Physics\Intersect.hpp" />
