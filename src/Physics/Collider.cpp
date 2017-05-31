@@ -20,8 +20,7 @@ namespace Physics {
 				case ColliderType::SPHERE:
 					return Sphere2Sphere((SphereCollider*)this, (SphereCollider*)other, intersection);
 				case ColliderType::AABB:
-					//TODO: Implement Sphere2AABB
-					break;
+					return Sphere2AABB((SphereCollider*)this, (AABBCollider*)other, intersection);
 			}
 		} else if(m_Type == ColliderType::AABB) {
 			switch(other->GetType()) {
