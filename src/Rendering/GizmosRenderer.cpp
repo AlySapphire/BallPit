@@ -4,6 +4,7 @@
 #include "Physics/PhysicsScene.hpp"
 #include "Physics/SphereCollider.hpp"
 #include "Physics/Spring.hpp"
+#include "Physics/AABBCollider.hpp"
 
 #include <Gizmos.h>
 
@@ -43,7 +44,8 @@ namespace Physics {
 			} 
 			//Render AABB
 			else if(collider->GetType() == Collider::ColliderType::AABB) {
-				//TODO: Render AABB
+				AABBCollider* ac = (AABBCollider*)collider;
+				aie::Gizmos::addAABBFilled(ac->GetCentre(), ac->GetExtents(), color);
 			}
 
 		}
