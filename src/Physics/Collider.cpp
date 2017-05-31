@@ -25,8 +25,7 @@ namespace Physics {
 		} else if(m_Type == ColliderType::AABB) {
 			switch(other->GetType()) {
 				case ColliderType::SPHERE:
-					//TODO: Implement AABB2Sphere
-					break;
+					return AABB2Sphere((AABBCollider*)this, (SphereCollider*)other, intersection);
 				case ColliderType::AABB:
 					//TODO: Implement AABB2AABB
 					break;
@@ -58,36 +57,28 @@ namespace Physics {
 		auto& boxCentre = objB->GetCentre();
 		auto& extents = objB->GetExtents();
 		auto& sphereCentre = objA->GetPosition();
-
+		
 		//Get the min and max of the box
 		glm::vec3 boxMin = boxCentre - extents;
 		glm::vec3 boxMax = boxCentre + extents;
-
+		
 		//Get closest point to sphere centre by clamping
 		glm::vec3 closestPoint = glm::max(boxMin, glm::min(sphereCentre, boxMax));
-
+		
 		//Calculate a direction vector
 		glm::vec3 dirVec = closestPoint - sphereCentre;
-
+		
 		//Get the length of the vector
 		float dist = glm::length(dirVec);
 		intersection->collisionVector = glm::normalize(dirVec);
-
+		
 		//Compare it to the sphere radius
 		return (dist < objA->GetRadius());
+		
+	}
 
-		//float x = glm::max(boxMin.x, glm::min(sphereCentre.x, boxMax.x));
-		//float y = glm::max(boxMin.y, glm::min(sphereCentre.y, boxMax.y));
-		//float z = glm::max(boxMin.z, glm::min(sphereCentre.z, boxMax.z));
-		//
-		//
-		//float dist = glm::sqrt((x - sphereCentre.x) * (x - sphereCentre.x) +
-		//						(y - sphereCentre.y) * (y - sphereCentre.y) +
-		//						(z - sphereCentre.z) * (z - sphereCentre.z));
-		//
-		//intersection->collisionVector = glm::vec3(x, y, z);
-		//
-		//return (dist < objA->GetRadius());
+	bool Collider::AABB2Sphere(AABBCollider* objA, SphereCollider* objB, IntersectData* intersection) {
+		return Sphere2AABB(objB, objA, intersection);
 	}
 
 }

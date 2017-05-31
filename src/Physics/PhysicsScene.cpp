@@ -128,6 +128,10 @@ namespace Physics {
 		//Loop through all collision pairs
 		for(auto iter : m_CollisionPairs) {
 
+			//Temporarily ignore AABB collision resolution
+			if(iter.objA->GetCollider()->GetType() == Collider::ColliderType::AABB || iter.objB->GetCollider()->GetType() == Collider::ColliderType::AABB)
+				continue;
+
 			//Get data from collision
 
 			//Collision normal (directon of collision and overlap)

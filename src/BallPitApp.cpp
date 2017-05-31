@@ -267,7 +267,7 @@ void BallPitApp::update(float deltaTime) {
 		obj->SetPosition(m_Camera->GetPosition());
 		obj->SetVelocity(m_Camera->GetForward() * shotSpeed);
 		obj->SetCollider(new Physics::SphereCollider(0.25f));
-		obj->SetMass(20.0f);
+		//obj->SetMass(20.0f);
 		obj->SetBounciness(5);
 
 		m_GizmosRenderer->GetRenderInfo(obj)->color = glm::vec4(
