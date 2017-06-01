@@ -232,8 +232,6 @@ bool BallPitApp::startup() {
 	//	}
 	//}
 
-	
-
 	//Give the scene gravity
 	m_PhysicsScene->SetGravity(glm::vec3(0, -9.8f, 0));
 
