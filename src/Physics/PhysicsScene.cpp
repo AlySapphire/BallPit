@@ -130,6 +130,13 @@ namespace Physics {
 
 			//Get data from collision
 
+			//find out if objects are able to be moved
+			const bool objAStatic = iter.objA->GetRigid();
+			const bool objBStatic = iter.objB->GetRigid();
+
+			//If neither object can be moved then continue
+			if(objAStatic && objBStatic)	continue;
+
 			//Collision normal (direction of collision and overlap)
 			glm::vec3 colNorm = glm::normalize(iter.intersection.collisionVector);
 
@@ -155,14 +162,42 @@ namespace Physics {
 			//Calculate the impulse force (vector of force and direction)
 			glm::vec3 impulse = (1.0f + bounciness) * colVector / (1.0f / massA + 1.0f / massB);
 
-			//Apply that force to both objects (each one in an opposite direction)
-			iter.objA->SetVelocity(velA - impulse * (1.0f / massA));
-			iter.objB->SetVelocity(velB + impulse * (1.0f / massB));
-
-			//Move the spheres so that they're not overlapping
+			//Move the objects so that they're not overlapping
 			glm::vec3 separate = iter.intersection.collisionVector * 0.5f;
-			iter.objA->SetPosition(iter.objA->GetPosition() - separate);
-			iter.objB->SetPosition(iter.objB->GetPosition() + separate);
+
+			//Apply that force to both objects (each one in an opposite direction)
+			if(!objAStatic)
+				iter.objA->SetVelocity(velA - impulse * (1.0f / massA));
+			//if(!objBStatic)
+			//	iter.objB->SetVelocity(velB + impulse * (1.0f / massB));
+			else {
+				glm::vec3 forceVector = -1 * massB * colNorm * (glm::dot(colNorm, velB));
+				iter.objB->SetVelocity(2.0f * forceVector);
+				iter.objB->SetPosition(iter.objB->GetPosition() + (separate * 2.0f));
+				return;
+			}
+				
+			if(!objBStatic && !objAStatic)
+				iter.objB->SetVelocity(velB + impulse * (1.0f / massB));
+			else if(!objAStatic) {
+				glm::vec3 forceVector = -1 * massA * colNorm * (glm::dot(colNorm, velA));
+				iter.objA->SetVelocity(2.0f * forceVector);
+				iter.objA->SetPosition(iter.objA->GetPosition() - (separate * 2.0f));
+				return;
+			}
+
+			if(objAStatic) {
+				iter.objB->SetPosition(iter.objB->GetPosition() + (separate * 2.0f));
+				return;
+			} else if (!objBStatic) {
+				iter.objB->SetPosition(iter.objB->GetPosition() + separate);
+			}
+
+			if(objBStatic) {
+				iter.objA->SetPosition(iter.objA->GetPosition() - (separate * 2.0f));
+			} else if(!objBStatic) {
+				iter.objA->SetPosition(iter.objA->GetPosition() - separate);
+			}
 
 		}
 

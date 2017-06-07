@@ -22,6 +22,7 @@ namespace Physics {
 		inline const float GetMass() const { return m_Mass; }
 		inline const float GetFriction() const { return m_Friction; }
 		inline const float GetBounciness() const { return m_Bounciness; }
+		inline const bool GetRigid() const { return m_Rigid; }
 		Collider* GetCollider();
 
 		//Setters
@@ -32,6 +33,7 @@ namespace Physics {
 		inline void SetMass(float a_Mass) { m_Mass = a_Mass; }
 		inline void SetFriction(float a_Fric) { m_Friction = a_Fric; }
 		inline void SetBounciness(float a_Bounce) { m_Bounciness = a_Bounce; }
+		inline void SetRigid(bool a_Rigid) { m_Rigid = a_Rigid; }
 		void SetCollider(Collider* coll);
 
 	protected:
@@ -48,6 +50,8 @@ namespace Physics {
 		float m_Bounciness;
 
 		Collider* m_Collider;
+
+		bool m_Rigid = false;
 
 	};
 
