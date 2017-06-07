@@ -70,7 +70,7 @@ bool BallPitApp::startup() {
 
 	//Test AABB
 	Physics::Object* testAABB = new Physics::Object();
-	testAABB->SetPosition(glm::vec3(0, 1, 0));
+	testAABB->SetPosition(glm::vec3(0, 1, 4));
 	testAABB->SetCollider(new Physics::AABBCollider(glm::vec3(0.5f)));
 	m_GizmosRenderer->GetRenderInfo(testAABB)->color = 
 		glm::vec4(

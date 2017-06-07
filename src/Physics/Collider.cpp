@@ -3,6 +3,7 @@
 #include "Physics/AABBCollider.hpp"
 
 #include <glm/geometric.hpp>
+#include <iostream>
 
 namespace Physics {
 
@@ -58,25 +59,31 @@ namespace Physics {
 		auto& boxCentre = objB->GetCentre();
 		auto& extents = objB->GetExtents();
 		auto& sphereCentre = objA->GetPosition();
+		float sphereRadius = objA->GetRadius();
 		
 		//Get the min and max of the box
 		glm::vec3 boxMin = boxCentre - extents;
 		glm::vec3 boxMax = boxCentre + extents;
 		
 		//Get closest point to sphere centre by clamping
-		glm::vec3 closestPoint = glm::max(boxMin, glm::min(sphereCentre, boxMax));
+		float x = glm::max(boxMin.x, glm::min(sphereCentre.x, boxMax.x));
+		float y = glm::max(boxMin.y, glm::min(sphereCentre.y, boxMax.y));
+		float z = glm::max(boxMin.z, glm::min(sphereCentre.z, boxMax.z));
+
+		float dist = glm::sqrt(glm::pow(x - sphereCentre.x, 2) + 
+							   glm::pow(y - sphereCentre.y, 2) +
+							   glm::pow(z - sphereCentre.z,2));
 		
-		//Calculate a direction vector
-		glm::vec3 dirVec = closestPoint - sphereCentre;
-		
-		//Get the length of the vector
-		float dist = glm::length(dirVec);
-		//This one is incorrect. It needs to be the normalized direction vector and the overlap length
-		intersection->collisionVector = glm::normalize(dirVec);
-		intersection->intersectionType = CollisionType::SPHERE2AABB;
+		//Store collision data
+		if(intersection != nullptr) {
+			glm::vec3 collisionNormal = glm::normalize(boxCentre - sphereCentre);
+			float overlap = sphereRadius - dist;
+			intersection->collisionVector = collisionNormal * overlap;
+			intersection->intersectionType = CollisionType::SPHERE2AABB;
+		}		
 		
 		//Compare it to the sphere radius
-		return (dist < objA->GetRadius());
+		return (dist < sphereRadius);
 		
 	}
 
@@ -85,25 +92,31 @@ namespace Physics {
 		auto& boxCentre = objA->GetCentre();
 		auto& extents = objA->GetExtents();
 		auto& sphereCentre = objB->GetPosition();
+		float sphereRadius = objB->GetRadius();
 
 		//Get the min and max of the box
 		glm::vec3 boxMin = boxCentre - extents;
 		glm::vec3 boxMax = boxCentre + extents;
 
 		//Get closest point to sphere centre by clamping
-		glm::vec3 closestPoint = glm::max(boxMin, glm::min(sphereCentre, boxMax));
+		float x = glm::max(boxMin.x, glm::min(sphereCentre.x, boxMax.x));
+		float y = glm::max(boxMin.y, glm::min(sphereCentre.y, boxMax.y));
+		float z = glm::max(boxMin.z, glm::min(sphereCentre.z, boxMax.z));
 
-		//Calculate a direction vector
-		glm::vec3 dirVec = closestPoint - sphereCentre;
+		float dist = glm::sqrt(glm::pow(x - sphereCentre.x, 2) +
+			glm::pow(y - sphereCentre.y, 2) +
+			glm::pow(z - sphereCentre.z, 2));
 
-		//Get the length of the vector
-		float dist = glm::length(dirVec);
-		//This one is incorrect. It needs to be the normalized direction vector and the overlap length
-		intersection->collisionVector = glm::normalize(dirVec);
-		intersection->intersectionType = CollisionType::AABB2SPHERE;
+		if(intersection != nullptr) {
+			glm::vec3 collisionNormal = glm::normalize(sphereCentre - boxCentre);
+			float overlap = sphereRadius - dist;
+			intersection->collisionVector = collisionNormal * overlap;
+			intersection->intersectionType = CollisionType::SPHERE2AABB;
+		}
+		
 
 		//Compare it to the sphere radius
-		return (dist < objB->GetRadius());
+		return (dist < sphereRadius);
 	}
 
 }

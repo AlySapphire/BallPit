@@ -17,6 +17,7 @@ namespace Physics {
 		//Getters
 		inline const glm::vec3& GetPosition() const { return m_Position; }
 		inline const glm::vec3& GetVelocity() const { return m_Velocity; }
+		inline const glm::vec3& GetMaxVelocity() const { return m_MaxVelocity; }
 		inline const glm::vec3& GetAcceleration() const { return m_Acceleration; }
 		inline const float GetMass() const { return m_Mass; }
 		inline const float GetFriction() const { return m_Friction; }
@@ -26,6 +27,7 @@ namespace Physics {
 		//Setters
 		void SetPosition(const glm::vec3& a_Pos);
 		inline void SetVelocity(const glm::vec3& a_Vel) { m_Velocity = a_Vel; }
+		inline void SetMaxVelocity(const glm::vec3& a_MaxVel) { m_MaxVelocity = a_MaxVel; }
 		inline void SetAcceleration(const glm::vec3& a_Acc) { m_Acceleration = a_Acc; }
 		inline void SetMass(float a_Mass) { m_Mass = a_Mass; }
 		inline void SetFriction(float a_Fric) { m_Friction = a_Fric; }
@@ -38,6 +40,7 @@ namespace Physics {
 
 		glm::vec3 m_Position;
 		glm::vec3 m_Velocity;
+		glm::vec3 m_MaxVelocity;
 		glm::vec3 m_Acceleration;
 
 		float m_Mass;

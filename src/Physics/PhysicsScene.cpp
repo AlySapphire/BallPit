@@ -128,51 +128,41 @@ namespace Physics {
 		//Loop through all collision pairs
 		for(auto iter : m_CollisionPairs) {
 
-			//Sphere2Sphere resolution
-			if(iter.intersection.intersectionType == CollisionType::SPHERE2SPHERE) {
+			//Get data from collision
 
-				//Get data from collision
+			//Collision normal (direction of collision and overlap)
+			glm::vec3 colNorm = glm::normalize(iter.intersection.collisionVector);
 
-				//Collision normal (directon of collision and overlap)
-				glm::vec3 colNorm = iter.intersection.collisionVector;
+			//Mass of both objects
+			float massA = iter.objA->GetMass();
+			float massB = iter.objB->GetMass();
 
-				//Mass of both objects
-				float massA = iter.objA->GetMass();
-				float massB = iter.objB->GetMass();
+			//Velocities of both objects (we might use relative velocity)
+			glm::vec3 velA = iter.objA->GetVelocity();
+			glm::vec3 velB = iter.objB->GetVelocity();
 
-				//Velocities of both objects (we might use relative velocity)
-				glm::vec3 velA = iter.objA->GetVelocity();
-				glm::vec3 velB = iter.objB->GetVelocity();
+			//Relative velocity
+			glm::vec3 relVel = velA - velB;
 
-				//Relative velocity
-				glm::vec3 relVel = velA - velB;
+			//Find out how much velocity each object had in the collision normal direction
+			//In fact, since we have the relative velocity, we can just find out once
+			//how much total velocity there is in the collision normal direction
+			glm::vec3 colVector = colNorm * (glm::dot(relVel, colNorm));
 
-				//Find out how much velocity each object had in the collision normal direction
-				//In fact, since we have the relative velocity, we can just find out once
-				//how much total velocity there is in the collision normal direction
-				glm::vec3 colVector = colNorm * (glm::dot(relVel, colNorm));
+			//Find the bounciness of the collision
+			float bounciness = glm::min(iter.objA->GetBounciness(), iter.objB->GetBounciness());
 
-				//Find the bounciness of the collision
-				float bounciness = glm::min(iter.objA->GetBounciness(), iter.objB->GetBounciness());
+			//Calculate the impulse force (vector of force and direction)
+			glm::vec3 impulse = (1.0f + bounciness) * colVector / (1.0f / massA + 1.0f / massB);
 
-				//Calculate the impulse force (vector of force and direction)
-				glm::vec3 impulse = (1.0f + bounciness) * colVector / (1.0f / massA + 1.0f / massB);
+			//Apply that force to both objects (each one in an opposite direction)
+			iter.objA->SetVelocity(velA - impulse * (1.0f / massA));
+			iter.objB->SetVelocity(velB + impulse * (1.0f / massB));
 
-				//Apply that force to both objects (each one in an opposite direction)
-				iter.objA->SetVelocity(velA - impulse * (1.0f / massA));
-				iter.objB->SetVelocity(velB + impulse * (1.0f / massB));
-
-				//Move the spheres so that they're not overlapping
-				glm::vec3 separate = iter.intersection.collisionVector * 0.5f;
-				iter.objA->SetPosition(iter.objA->GetPosition() - separate);
-				iter.objB->SetPosition(iter.objB->GetPosition() + separate);
-
-			}
-			//TODO: Implement Resolutions for:
-			//Sphere2AABB
-			//AABB2Sphere
-			//AABB2AABB
-			
+			//Move the spheres so that they're not overlapping
+			glm::vec3 separate = iter.intersection.collisionVector * 0.5f;
+			iter.objA->SetPosition(iter.objA->GetPosition() - separate);
+			iter.objB->SetPosition(iter.objB->GetPosition() + separate);
 
 		}
 

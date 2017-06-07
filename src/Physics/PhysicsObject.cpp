@@ -3,7 +3,7 @@
 
 namespace Physics {
 
-	Object::Object() : m_Mass(1.0f), m_Friction(1.0f), m_Bounciness(1.0f), m_Collider(nullptr) {
+	Object::Object() : m_Mass(1.0f), m_Friction(1.0f), m_Bounciness(1.0f), m_Collider(nullptr), m_MaxVelocity(glm::vec3(20, 30, 20)) {
 	}
 
 	Object::~Object() {
@@ -17,6 +17,21 @@ namespace Physics {
 		ApplyForce(-m_Velocity * m_Friction);
 
 		m_Velocity += m_Acceleration * fixedTime;
+		//if(m_Velocity.x > m_MaxVelocity.x)
+		//	m_Velocity.x = m_MaxVelocity.x;
+		//else if(m_Velocity.x < -m_MaxVelocity.x)
+		//	m_Velocity.x = -m_MaxVelocity.x;
+		//
+		//if(m_Velocity.y > m_MaxVelocity.y)
+		//	m_Velocity.y = m_MaxVelocity.y;
+		//else if(m_Velocity.y < -m_MaxVelocity.y)
+		//	m_Velocity.y = -m_MaxVelocity.y;
+		//
+		//if(m_Velocity.z > m_MaxVelocity.z)
+		//	m_Velocity.z = m_MaxVelocity.z;
+		//else if(m_Velocity.z < -m_MaxVelocity.z)
+		//	m_Velocity.z = -m_MaxVelocity.z;
+		
 		m_Position += m_Velocity * fixedTime;
 		m_Acceleration = glm::vec3();
 		UpdateTransform();
