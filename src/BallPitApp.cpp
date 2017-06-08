@@ -55,10 +55,10 @@ bool BallPitApp::startup() {
 
 	//Add Objects to the scene
 	for(int x = -5; x < 5; x++) {
-		//for(int y = 1; y < 4; y++) {
+		for(int y = 1; y < 4; y++) {
 			for(int z = -5; z < 5; z++) {
 				Physics::Object* obj = new Physics::Object();
-				obj->SetPosition(glm::vec3(x + 0.5f, 2, z + 0.5f));
+				obj->SetPosition(glm::vec3(x + 0.5f, y, z + 0.5f));
 				obj->SetCollider(new Physics::SphereCollider(0.5f));
 				m_GizmosRenderer->GetRenderInfo(obj)->color =
 					glm::vec4(
@@ -70,7 +70,7 @@ bool BallPitApp::startup() {
 
 				m_PhysicsScene->AttachObject(obj);
 			}
-		//}
+		}
 	}
 
 	float border = 7.5f;

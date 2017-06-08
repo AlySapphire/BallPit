@@ -5,6 +5,8 @@
 #include "Physics/AABBCollider.hpp"
 
 #include <glm/geometric.hpp>
+#include <imgui.h>
+#include <chrono>
 
 namespace Physics {
 
@@ -53,8 +55,23 @@ namespace Physics {
 
 		m_GlobalForce = glm::vec3();
 
+		ImGui::Begin("Performance");
+
+		std::chrono::steady_clock::time_point detectStart = std::chrono::steady_clock::now();
 		DetectCollisions();
+		std::chrono::steady_clock::time_point detectEnd = std::chrono::steady_clock::now();
+		std::chrono::duration<double> detectionLength = std::chrono::duration_cast<std::chrono::duration<double>>(detectEnd - detectStart);
+
+		ImGui::Text("Detection time: %fms.", detectionLength.count() * 1000);
+
+		std::chrono::steady_clock::time_point resolveStart = std::chrono::steady_clock::now();
 		ResolveCollisions();
+		std::chrono::steady_clock::time_point resolveEnd = std::chrono::steady_clock::now();
+		std::chrono::duration<double> resolveLength = std::chrono::duration_cast<std::chrono::duration<double>>(resolveEnd - resolveStart);
+
+		ImGui::Text("Resolve time: %fms", resolveLength.count() * 1000);
+
+		ImGui::End();
 
 	}
 
