@@ -2,6 +2,7 @@
 #include "Physics/PhysicsObject.hpp"
 #include "Physics/Collider.hpp"
 #include "Physics/Spring.hpp"
+#include "Physics/AABBCollider.hpp"
 
 #include <glm/geometric.hpp>
 
@@ -165,39 +166,34 @@ namespace Physics {
 			//Move the objects so that they're not overlapping
 			glm::vec3 separate = iter.intersection.collisionVector * 0.5f;
 
-			//Apply that force to both objects (each one in an opposite direction)
-			if(!objAStatic)
-				iter.objA->SetVelocity(velA - impulse * (1.0f / massA));
-			//if(!objBStatic)
-			//	iter.objB->SetVelocity(velB + impulse * (1.0f / massB));
-			else {
-				glm::vec3 forceVector = -1 * massB * colNorm * (glm::dot(colNorm, velB));
-				iter.objB->SetVelocity(2.0f * forceVector);
-				iter.objB->SetPosition(iter.objB->GetPosition() + (separate * 2.0f));
-				return;
-			}
-				
-			if(!objBStatic && !objAStatic)
-				iter.objB->SetVelocity(velB + impulse * (1.0f / massB));
-			else if(!objAStatic) {
-				glm::vec3 forceVector = -1 * massA * colNorm * (glm::dot(colNorm, velA));
-				iter.objA->SetVelocity(2.0f * forceVector);
-				iter.objA->SetPosition(iter.objA->GetPosition() - (separate * 2.0f));
-				return;
-			}
-
 			if(objAStatic) {
+
+				//Calculate force to be reflected back to the non-static object
+				glm::vec3 reflectForce = -1 * massB * colNorm * glm::dot(colNorm, velB);
+
+				iter.objB->SetVelocity(reflectForce);
+
 				iter.objB->SetPosition(iter.objB->GetPosition() + (separate * 2.0f));
-				return;
-			} else if (!objBStatic) {
-				iter.objB->SetPosition(iter.objB->GetPosition() + separate);
+
+				continue;
+			}
+			if(objBStatic) {
+
+				//Calculate force to be reflected back to the non-static object
+				glm::vec3 reflectForce = -1 * massA * colNorm * glm::dot(colNorm, velA);
+
+				iter.objA->SetVelocity(reflectForce);
+
+				iter.objA->SetPosition(iter.objA->GetPosition() - (separate * 2.0f));
+				continue;
 			}
 
-			if(objBStatic) {
-				iter.objA->SetPosition(iter.objA->GetPosition() - (separate * 2.0f));
-			} else if(!objBStatic) {
-				iter.objA->SetPosition(iter.objA->GetPosition() - separate);
-			}
+			//Apply that force to both objects (each one in an opposite direction)
+			iter.objA->SetVelocity(velA - impulse * (1.0f / massA));
+			iter.objB->SetVelocity(velB + impulse * (1.0f / massB));
+
+			iter.objB->SetPosition(iter.objB->GetPosition() + separate);
+			iter.objA->SetPosition(iter.objA->GetPosition() - separate);			
 
 		}
 
