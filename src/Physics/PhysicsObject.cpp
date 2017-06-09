@@ -1,6 +1,8 @@
 #include "Physics/PhysicsObject.hpp"
 #include "Physics/Collider.hpp"
 
+#include <glm/geometric.hpp>
+
 namespace Physics {
 
 	Object::Object() : m_Mass(1.0f), m_Friction(1.0f), m_Bounciness(1.0f), m_Collider(nullptr), m_MaxVelocity(glm::vec3(20, 30, 20)) {
@@ -10,31 +12,22 @@ namespace Physics {
 		delete m_Collider;
 	}
 
-	void Object::FixedUpdate() {
+	bool Object::FixedUpdate() {
+
+		glm::vec3 posOld = m_Position;
 
 		float fixedTime = 1.0f / 60.0f;
 
 		ApplyForce(-m_Velocity * m_Friction);
 
-		m_Velocity += m_Acceleration * fixedTime;
-		//if(m_Velocity.x > m_MaxVelocity.x)
-		//	m_Velocity.x = m_MaxVelocity.x;
-		//else if(m_Velocity.x < -m_MaxVelocity.x)
-		//	m_Velocity.x = -m_MaxVelocity.x;
-		//
-		//if(m_Velocity.y > m_MaxVelocity.y)
-		//	m_Velocity.y = m_MaxVelocity.y;
-		//else if(m_Velocity.y < -m_MaxVelocity.y)
-		//	m_Velocity.y = -m_MaxVelocity.y;
-		//
-		//if(m_Velocity.z > m_MaxVelocity.z)
-		//	m_Velocity.z = m_MaxVelocity.z;
-		//else if(m_Velocity.z < -m_MaxVelocity.z)
-		//	m_Velocity.z = -m_MaxVelocity.z;
-		
+		m_Velocity += m_Acceleration * fixedTime;		
 		m_Position += m_Velocity * fixedTime;
 		m_Acceleration = glm::vec3();
 		UpdateTransform();
+
+		glm::vec3 movementDiff = glm::abs(m_Position - posOld);
+
+		return(movementDiff.x > 0.1f || movementDiff.y > 0.1f || movementDiff.z > 0.1f);
 
 	}
 

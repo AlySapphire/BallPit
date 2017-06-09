@@ -10,7 +10,7 @@ namespace Physics {
 		Object();
 		virtual ~Object();
 
-		virtual void FixedUpdate();
+		virtual bool FixedUpdate();
 
 		void ApplyForce(const glm::vec3& a_Force);
 

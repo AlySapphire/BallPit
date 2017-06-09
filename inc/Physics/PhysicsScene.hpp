@@ -43,8 +43,10 @@ namespace Physics {
 
 	protected:
 
-		void DetectCollisions();
-		void ResolveCollisions();
+		friend class Tree;
+
+		//void DetectCollisions();
+		//void ResolveCollisions();
 
 		std::vector<Object*> m_Objects;
 		std::vector<Constraint*> m_Constraints;
@@ -54,6 +56,8 @@ namespace Physics {
 
 		glm::vec3 m_GlobalForce;
 		glm::vec3 m_Gravity;
+
+		Tree* m_tree;
 
 	};
 
