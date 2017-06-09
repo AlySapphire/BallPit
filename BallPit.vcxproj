@@ -96,6 +96,7 @@
     <ClCompile Include="src\Physics\AABBCollider.cpp" />
     <ClCompile Include="src\Physics\Collider.cpp" />
     <ClCompile Include="src\Physics\Constraint.cpp" />
+    <ClCompile Include="src\Physics\OctTree.cpp" />
     <ClCompile Include="src\Physics\PhysicsObject.cpp" />
     <ClCompile Include="src\Physics\PhysicsScene.cpp" />
     <ClCompile Include="src\Physics\SphereCollider.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="inc\Physics\Collider.hpp" />
     <ClInclude Include="inc\Physics\Constraint.hpp" />
     <ClInclude Include="inc\Physics\Intersect.hpp" />
+    <ClInclude Include="inc\Physics\OctTree.hpp" />
     <ClInclude Include="inc\Physics\PhysicsObject.hpp" />
     <ClInclude Include="inc\Physics\PhysicsScene.hpp" />
     <ClInclude Include="inc\Physics\SphereCollider.hpp" />
