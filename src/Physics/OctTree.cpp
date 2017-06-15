@@ -7,6 +7,7 @@ namespace Physics {
 
 	bool OctTree::m_treeBuilt = false;
 	bool OctTree::m_treeReady = false;
+	std::vector<Object*> OctTree::m_pendingInsertion;
 
 	OctTree::OctTree() : m_parent(nullptr) {
 	}
