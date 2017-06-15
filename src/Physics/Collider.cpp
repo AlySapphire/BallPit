@@ -28,8 +28,7 @@ namespace Physics {
 				case ColliderType::SPHERE:
 					return AABB2Sphere((AABBCollider*)this, (SphereCollider*)other, intersection);
 				case ColliderType::AABB:
-					//TODO: Implement AABB2AABB
-					break;
+					return AABB2AABB((AABBCollider*)this, (AABBCollider*)other, intersection);
 			}
 		}
 		
@@ -135,16 +134,20 @@ namespace Physics {
 		glm::vec3 boxBMin = boxBCenter - boxBExtents;
 		glm::vec3 boxBMax = boxBCenter + boxBExtents;
 
-		float x = glm::max(boxAMin.x, glm::min(boxBCenter.x, boxAMax.x));
-		float y = glm::max(boxAMin.y, glm::min(boxBCenter.y, boxAMax.y));
-		float z = glm::max(boxAMin.z, glm::min(boxBCenter.z, boxAMax.z));
+		float x1 = glm::max(boxAMin.x, glm::min(boxBCenter.x, boxAMax.x));
+		float y1 = glm::max(boxAMin.y, glm::min(boxBCenter.y, boxAMax.y));
+		float z1 = glm::max(boxAMin.z, glm::min(boxBCenter.z, boxAMax.z));
 
-		float dist = glm::sqrt(glm::pow(x - boxBCenter.x, 2) + 
-							   glm::pow(y - boxBCenter.y, 2) + 
-							   glm::pow(z - boxBCenter.z, 2));
+		float x2 = glm::max(boxBMin.x, glm::min(boxACenter.x, boxBMax.x));
+		float y2 = glm::max(boxBMin.y, glm::min(boxACenter.y, boxBMax.y));
+		float z2 = glm::max(boxBMin.z, glm::min(boxACenter.z, boxBMax.z));
+
+		float dist = glm::sqrt(glm::pow(x1 - x2, 2) +
+							   glm::pow(y1 - y2, 2) +
+							   glm::pow(z1 - z2, 2));
 
 		glm::vec3 collisionNormal = glm::normalize(boxBCenter - boxACenter);
-		float overlap = glm::length(boxBMax - boxAMin) - dist;
+		float overlap = dist;
 		intersection->collisionVector = collisionNormal * overlap;
 		intersection->intersectionType = CollisionType::AABB2AABB;
 
