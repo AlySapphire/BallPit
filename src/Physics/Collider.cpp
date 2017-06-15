@@ -119,6 +119,40 @@ namespace Physics {
 		return (dist < sphereRadius);
 	}
 
+	bool Collider::AABB2AABB(AABBCollider * objA, AABBCollider * objB, IntersectData * intersection) {
+
+		//Cache box values
+		auto& boxACenter = objA->GetCentre();
+		auto& boxAExtents = objA->GetExtents();
+
+		auto& boxBCenter = objB->GetCentre();
+		auto& boxBExtents = objB->GetExtents();
+
+		//Calculate min and max of both boxes
+		glm::vec3 boxAMin = boxACenter - boxAExtents;
+		glm::vec3 boxAMax = boxACenter + boxAExtents;
+
+		glm::vec3 boxBMin = boxBCenter - boxBExtents;
+		glm::vec3 boxBMax = boxBCenter + boxBExtents;
+
+		float x = glm::max(boxAMin.x, glm::min(boxBCenter.x, boxAMax.x));
+		float y = glm::max(boxAMin.y, glm::min(boxBCenter.y, boxAMax.y));
+		float z = glm::max(boxAMin.z, glm::min(boxBCenter.z, boxAMax.z));
+
+		float dist = glm::sqrt(glm::pow(x - boxBCenter.x, 2) + 
+							   glm::pow(y - boxBCenter.y, 2) + 
+							   glm::pow(z - boxBCenter.z, 2));
+
+		glm::vec3 collisionNormal = glm::normalize(boxBCenter - boxACenter);
+		float overlap = glm::length(boxBMax - boxAMin) - dist;
+		intersection->collisionVector = collisionNormal * overlap;
+		intersection->intersectionType = CollisionType::AABB2AABB;
+
+		return(boxAMin.x <= boxBMax.x && boxAMax.x >= boxBMin.x) && 
+			  (boxAMin.y <= boxBMax.y && boxAMax.y >= boxBMin.y) &&
+			  (boxAMin.z <= boxBMax.z && boxAMax.z >= boxBMin.z);
+	}
+
 }
 
 

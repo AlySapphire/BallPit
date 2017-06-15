@@ -29,6 +29,7 @@ namespace Physics {
 		static bool Sphere2Sphere(SphereCollider* objA, SphereCollider* objB, IntersectData* intersection);
 		static bool Sphere2AABB(SphereCollider* objA, AABBCollider* objB, IntersectData* intersection);
 		static bool AABB2Sphere(AABBCollider* objA, SphereCollider* objB, IntersectData* intersection);
+		static bool AABB2AABB(AABBCollider* objA, AABBCollider* objB, IntersectData* intersection);
 
 	protected:
 
