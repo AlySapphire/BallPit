@@ -23,6 +23,7 @@ namespace Physics {
 		void UpdateTree();
 		void DoInsert(Object* obj);
 		void FindEnclosingCube();
+		bool Contains(Object* obj, const glm::vec3& minRegion, const glm::vec3& maxRegion);
 
 		OctTree* m_parent;
 		std::vector<OctTree*> m_children;

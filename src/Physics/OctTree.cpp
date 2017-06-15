@@ -1,5 +1,7 @@
 #include "Physics/OctTree.hpp"
 #include "Physics/PhysicsObject.hpp"
+#include "Physics/AABBCollider.hpp"
+#include "Physics/SphereCollider.hpp"
 
 #include <glm/geometric.hpp>
 
@@ -59,7 +61,15 @@ namespace Physics {
 		glm::vec3 octantMin[8] = {
 			{ m_regionMin.x, m_regionMin.y, m_regionMin.z }, { center.x, m_regionMin.y, m_regionMin.z},
 			{ center.x, m_regionMin.y, center.z }, { m_regionMin.x, m_regionMin.y, center.z }, 
-			{  }
+			{ m_regionMin.x, center.y, m_regionMin.z }, { center.x, center.y, m_regionMin.z },
+			{ center.x, center.y, center.z }, { m_regionMin.x, center.y, center.z }
+		};
+
+		glm::vec3 octantMax[8] = {
+			{ center.x, center.y, center.z }, { m_regionMax.x, center.y, center.z },
+			{ m_regionMax.x, center.y, m_regionMax.z }, { center.x, center.y, m_regionMax.z },
+			{ center.x, m_regionMax.y, center.z }, { m_regionMax.x, m_regionMax.y, center.z },
+			{ m_regionMax.x, m_regionMax.y, m_regionMax.z }, { center.x, m_regionMax.y, m_regionMax.z }
 		};
 
 	}
@@ -124,6 +134,31 @@ namespace Physics {
 		m_regionMin -= offset;
 		m_regionMax -= offset;
 
+	}
+
+	bool OctTree::Contains(Object * obj, const glm::vec3 & minRegion, const glm::vec3 & maxRegion) {
+
+		switch(obj->GetCollider()->GetType()) {
+			case Collider::ColliderType::AABB: {
+				//Cast to AABB collider
+				AABBCollider* ac = (AABBCollider*)obj->GetCollider();
+				
+				//Cache AABB values
+				auto& boxCenter = ac->GetCentre();
+				auto& boxExtents = ac->GetExtents();
+
+				//Calculate min and max of AABB
+				glm::vec3 boxMin = boxCenter - boxExtents;
+				glm::vec3 boxMax = boxCenter + boxExtents;
+
+
+
+			}
+				break;
+				
+		}
+
+		return false;
 	}
 
 }
