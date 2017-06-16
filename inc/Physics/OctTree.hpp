@@ -25,6 +25,8 @@ namespace Physics {
 		void FindEnclosingCube();
 		bool Contains(Object* obj, const glm::vec3& minRegion, const glm::vec3& maxRegion);
 
+		OctTree* CreateNode(const glm::vec3& regionMin, const glm::vec3& regionMax, std::vector<Object*>& objs);
+
 		OctTree* m_parent;
 		std::vector<OctTree*> m_children;
 
@@ -45,6 +47,8 @@ namespace Physics {
 		std::vector<Object*> m_objects;
 
 		static std::vector<Object*> m_pendingInsertion;
+
+		bool m_hasChildren = false;
 
 	};
 }
