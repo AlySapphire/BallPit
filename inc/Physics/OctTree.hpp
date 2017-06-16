@@ -26,6 +26,9 @@ namespace Physics {
 		bool Contains(Object* obj, const glm::vec3& minRegion, const glm::vec3& maxRegion);
 
 		OctTree* CreateNode(const glm::vec3& regionMin, const glm::vec3& regionMax, std::vector<Object*>& objs);
+		OctTree* CreateNode(const glm::vec3& regionMin, const glm::vec3& regionMax, Object* obj);
+
+		void DetectCollisions(std::vector<Object*>* parentObjs = nullptr);
 
 		OctTree* m_parent;
 		std::vector<OctTree*> m_children;

@@ -226,6 +226,34 @@ namespace Physics {
 			{ m_regionMax.x, m_regionMax.y, m_regionMax.z },{ center.x, m_regionMax.y, m_regionMax.z }
 		};
 
+		if(!m_children.empty()) {
+			for(unsigned int i = 0; i < m_children.size(); i++) {
+				if(m_children[i] == nullptr)	continue;
+				octantMin[i] = m_children[i]->m_regionMin;
+				octantMax[i] = m_children[i]->m_regionMax;
+			}
+		}
+
+		if(Contains(obj, m_regionMin, m_regionMax)) {
+			bool found = false;
+			for(int i = 0; i < 8; i++) {
+				if(Contains(obj, octantMin[i], octantMax[i])) {
+					if(m_children[i] != nullptr)
+						m_children[i]->Insert(obj);
+					else {
+						m_children[i] = CreateNode(octantMin[i], octantMax[i], obj);
+						m_activeNodes |= (unsigned char)(1 << i);
+					}
+					found = true;
+					break;
+				}
+			}
+			if(!found)
+				m_objects.push_back(obj);
+		} else {
+			FindEnclosingCube();
+			BuildTree();
+		}
 		
 
 	}
@@ -314,6 +342,30 @@ namespace Physics {
 		node->m_parent = this;
 
 		return node;
+
+	}
+
+	OctTree * OctTree::CreateNode(const glm::vec3 & regionMin, const glm::vec3 & regionMax, Object * obj) {
+		vector<Object*> temp = { obj };
+
+		OctTree* node = new OctTree(regionMin, regionMax, temp);
+		node->m_parent = this;
+
+		return node;
+
+	}
+
+	void OctTree::DetectCollisions(std::vector<Object*>* parentObjs) {
+
+		//TODO: Implement detection algorithm
+
+		if(parentObjs != nullptr) {
+			for(auto parent : *parentObjs) {
+				for(auto obj : m_objects) {
+
+				}
+			}
+		}
 
 	}
 
